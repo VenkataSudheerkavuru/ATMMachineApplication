@@ -15,12 +15,14 @@ public class WithDrawServiceImpl implements WithDrawService {
     private final AtmMachine atmMachine;
     private final DisplayService displayService;
     private final WithdrawValidation withdrawValidation;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
-    public WithDrawServiceImpl(AtmMachine atmMachine) {
+
+    public WithDrawServiceImpl(AtmMachine atmMachine, DisplayService displayService, Scanner scanner) {
         this.atmMachine = atmMachine;
-        displayService = new DisplayService();
-        withdrawValidation = new WithdrawValidation();
+        this.displayService = displayService;
+        this.scanner = scanner;
+        this.withdrawValidation = new WithdrawValidation();
     }
 
     /**

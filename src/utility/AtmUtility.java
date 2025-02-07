@@ -19,13 +19,13 @@ public class AtmUtility {
      */
     public void run() {
         AtmMachine atmMachine = AtmMachine.getInstance();
+        Scanner scanner = new Scanner(System.in);
         DisplayService displayService = new DisplayService();
-        DepositService depositService = new DepositServiceImpl(atmMachine);
-        WithDrawService withDrawService = new WithDrawServiceImpl(atmMachine);
+        DepositService depositService = new DepositServiceImpl(atmMachine,displayService,scanner);
+        WithDrawService withDrawService = new WithDrawServiceImpl(atmMachine,displayService,scanner);
         displayService.display("Welcome to ATM Machine..");
         while(true){
             displayService.display("\n 1. Deposit \n 2. Withdraw \n 3. Display \n 4. Exit");
-            Scanner scanner = new Scanner(System.in);
             displayService.display("Enter Your Choice ");
             int selection = scanner.nextInt();
             switch (selection){

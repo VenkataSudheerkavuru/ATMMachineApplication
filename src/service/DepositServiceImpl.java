@@ -15,12 +15,13 @@ public class DepositServiceImpl implements DepositService {
     private final AtmMachine atmMachine;
     private final DepositValidation depositValidation;
     private final DisplayService displayService;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner ;
 
-    public DepositServiceImpl(AtmMachine atmMachine) {
+    public DepositServiceImpl(AtmMachine atmMachine, DisplayService displayService, Scanner scanner) {
         this.atmMachine = atmMachine;
+        this.displayService = displayService;
+        this.scanner = scanner;
         this.depositValidation = new DepositValidation();
-        displayService = new DisplayService();
     }
 
     /**
