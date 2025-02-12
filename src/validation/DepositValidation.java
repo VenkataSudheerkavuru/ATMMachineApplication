@@ -14,7 +14,4 @@ public class DepositValidation {
         return noteCount < 0;
     }
 
-
-
-
 }

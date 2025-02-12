@@ -15,7 +15,7 @@ public class DepositServiceImpl implements DepositService {
     private final AtmMachine atmMachine;
     private final DepositValidation depositValidation;
     private final DisplayService displayService;
-    private final Scanner scanner ;
+    private final Scanner scanner;
 
     public DepositServiceImpl(AtmMachine atmMachine, DisplayService displayService, Scanner scanner) {
         this.atmMachine = atmMachine;
@@ -32,18 +32,23 @@ public class DepositServiceImpl implements DepositService {
         Double balance = atmMachine.getBalance();
         NoteEnum[] noteEnums = getNoteEnums();
 
+        balance = getBalance(noteEnums, balance);
+        atmMachine.setBalance(balance);
+        displayService.display("After Depositing Atm machine contains : " + atmMachine);
+    }
+
+    private Double getBalance(NoteEnum[] noteEnums, Double balance) {
         for (NoteEnum noteEnum : noteEnums) {
             int note = noteEnum.getValue();
             int noteCount = getNoteCount(note);
-            if(depositValidation.validateNoteCount(noteCount)){
+            if (depositValidation.validateNoteCount(noteCount)) {
                 displayService.display("Enter positive value only.");
-            }else{
+            } else {
                 atmMachine.addNotesToMap(note, noteCount);
                 balance = balance + noteCount * note;
             }
         }
-        atmMachine.setBalance(balance);
-        displayService.display("After Depositing Atm machine contains : " + atmMachine);
+        return balance;
     }
 
     /**

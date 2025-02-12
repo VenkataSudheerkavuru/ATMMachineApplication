@@ -25,22 +25,7 @@ public class WithDrawServiceImpl implements WithDrawService {
         this.withdrawValidation = new WithdrawValidation();
     }
 
-    /**
-     * Withdraw the amount from ATM if available balance and sufficient required notes available
-     */
-    @Override
-    public void withDraw() {
-
-        //creating new hashmap because if requested amount not adjusted with available notes
-        // our original map should get preserved.
-        Map<Integer, Integer> noteMap = new HashMap<>(atmMachine.getNoteMap());
-        NoteEnum[] sortedKeys = NoteEnum.values();
-        Map<Integer, Integer> withdrawMap = new HashMap<>();
-        double amount = getWithdrawAmount();
-        if (withdrawValidation.validateWithdrawAmount(amount)) {
-            return;
-        }
-        double remainingAmount = amount;
+    private static double getRemainingAmount(NoteEnum[] sortedKeys, double remainingAmount, Map<Integer, Integer> noteMap, Map<Integer, Integer> withdrawMap) {
         for (NoteEnum key : sortedKeys) {
             int enumValue = key.getValue();
             if (remainingAmount >= enumValue) {
@@ -57,6 +42,26 @@ public class WithDrawServiceImpl implements WithDrawService {
                 }
             }
         }
+        return remainingAmount;
+    }
+
+    /**
+     * Withdraw the amount from ATM if available balance and sufficient required notes available
+     */
+    @Override
+    public void withDraw() {
+
+        //creating new hashmap because if requested amount not adjusted with available notes
+        // our original map should get preserved.
+        Map<Integer, Integer> noteMap = new HashMap<>(atmMachine.getNoteMap());
+        NoteEnum[] sortedKeys = NoteEnum.values();
+        Map<Integer, Integer> withdrawMap = new HashMap<>();
+        double amount = getWithdrawAmount();
+        if (withdrawValidation.validateWithdrawAmount(amount)) {
+            return;
+        }
+        double remainingAmount = amount;
+        remainingAmount = getRemainingAmount(sortedKeys, remainingAmount, noteMap, withdrawMap);
         // After completing all available notes still requested amount is not available then stop withdraw
         if (withdrawValidation.validateRemainingAmount(remainingAmount)) {
             return;
